@@ -1,0 +1,19 @@
+:host {
+    .app-container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+
+        navbar {
+            height: 5vh;
+        }
+
+        user-profile {
+            height: 50vh;
+        }
+
+        peers-gallery {
+            height: 45vh;
+        }
+    }
+}

@@ -1,0 +1,31 @@
+:host {
+    margin: 10px;
+
+    .container {
+        width: 100px;
+    }
+
+    .user-profile {
+        height: 100px;
+        width: 100px;
+        border-radius: 100px;
+        background-color: #dddd;
+    }
+
+    .user-id {
+        overflow-wrap: break-word;
+        text-align: center;
+    }
+
+    #file-input {
+        visibility: hidden;
+    }
+
+    file-share-dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+}

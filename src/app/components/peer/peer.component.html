@@ -1,0 +1,9 @@
+<div class="container">
+  <div class="user-profile" (click)="onProfileClick()"></div>
+  <div class="user-id">{{ userId }}</div>
+  <file-share-dialog
+    *ngIf="showFileShareDialog"
+    [username]="userId"
+    (close)="onDialogClose()"
+  ></file-share-dialog>
+</div>

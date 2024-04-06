@@ -1,0 +1,22 @@
+<div class="backdrop" (click)="onClose()"></div>
+<div class="container">
+  <div class="close-button" (click)="onClose()">
+    <span class="material-symbols-outlined"> close </span>
+  </div>
+  <div class="profile-picture"></div>
+  <div class="username">{{ username }}</div>
+  <div class="send-button" (click)="openFilePicker()">Send file</div>
+  <div class="transfer-status-list">
+    <span *ngIf="false"
+      >Click on send button to send a file or wait for others to send.</span
+    >
+    <transfer-status></transfer-status>
+  </div>
+  <input
+    #fileInput
+    (change)="onFileSelection()"
+    type="file"
+    name="file-input"
+    id="file-input"
+  />
+</div>

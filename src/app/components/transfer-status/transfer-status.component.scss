@@ -1,0 +1,62 @@
+:host {
+    .container {
+        display: flex;
+        background-color: white;
+        border-radius: 10px;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .file-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 100px;
+        background-color: grey;
+        margin: 8px;
+        flex: 0 0 48px;
+    }
+
+    .middle-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: 0.8rem;
+        padding-right: 8px;
+        flex: 1;
+        min-width: 0;
+
+        .file-name {
+            overflow: hidden;
+        }
+
+        .status-message {
+            color: grey;
+        }
+
+        .ellipsis {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            width: 100%;
+        }
+
+
+    }
+
+    .button {
+        border-left: 1px solid grey;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        span {
+            padding: 16px;
+            font-size: 1rem;
+        }
+    }
+
+
+}

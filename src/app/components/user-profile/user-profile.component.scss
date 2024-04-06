@@ -1,0 +1,18 @@
+$profile-icon-size: 150px;
+
+:host {
+    .container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        .profile {
+            width: $profile-icon-size;
+            height: $profile-icon-size;
+            border-radius: $profile-icon-size;
+            background-color: #333333;
+        }
+    }
+}

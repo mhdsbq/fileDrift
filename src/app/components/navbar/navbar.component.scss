@@ -1,0 +1,14 @@
+:host {
+    .container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+
+        span {
+            font-size: large;
+            font-weight: bold;
+            margin-top: 0px;
+            margin-left: 10px;
+        }
+    }
+}
