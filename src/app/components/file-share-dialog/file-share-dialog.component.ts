@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { TransferStatusComponent } from '../transfer-status/transfer-status.component';
 import { NgIf } from '@angular/common';
 
@@ -18,7 +11,9 @@ import { NgIf } from '@angular/common';
 })
 export class FileShareDialogComponent {
   @Input() public username!: string;
+
   @Output() public close = new EventEmitter<void>();
+  @Output() public fileSelection = new EventEmitter<File>();
 
   @ViewChild('fileInput') public fileInput?: ElementRef<HTMLInputElement>;
 
@@ -46,6 +41,6 @@ export class FileShareDialogComponent {
       return;
     }
 
-    const file = files[0];
+    this.fileSelection.emit(files[0]);
   }
 }

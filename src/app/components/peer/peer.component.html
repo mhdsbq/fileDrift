@@ -1,9 +1,10 @@
 <div class="container">
-  <div class="user-profile" (click)="onProfileClick()"></div>
-  <div class="user-id">{{ userId }}</div>
+  <div class="remote-user-profile" (click)="onProfileClick()"></div>
+  <div class="user-id"> <span class="conn-status" [class]="{connected: isConnected, disconnected:!isConnected}"></span> {{ connectionId }}</div>
   <file-share-dialog
     *ngIf="showFileShareDialog"
-    [username]="userId"
+    [username]="connectionId"
+    (fileSelection)="onFileSelection($event)"
     (close)="onDialogClose()"
   ></file-share-dialog>
 </div>

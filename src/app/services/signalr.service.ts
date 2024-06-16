@@ -1,30 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { Observable, Subject } from 'rxjs';
-import { JoinRoomMessage } from './../models/join-room-message';
-import { PeerRequestMessage } from '../models/peer-request-message';
-import { LeaveRoomMessage } from '../models/leave-room-message';
+import { JoinRoomMessage } from '../types/signal-r/join-room-message';
+import { LeaveRoomMessage } from '../types/signal-r/leave-room-message';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SignalRService {
+  public onConnection: Observable<void>;
   public joinRoomMessage: Observable<JoinRoomMessage>;
-  public peerRequestMessage: Observable<PeerRequestMessage>;
   public leaveRoomMessage: Observable<LeaveRoomMessage>;
-  public userId$: Observable<string>;
 
   private signalRConn: HubConnection;
+  private _onConnection = new Subject<void>();
   private _joinRoomMessage = new Subject<JoinRoomMessage>();
-  private _peerRequestMessage = new Subject<PeerRequestMessage>();
   private _leaveRoomMessage = new Subject<LeaveRoomMessage>();
-  private _userId = new Subject<string>();
 
   public constructor() {
+    this.onConnection = this._onConnection.asObservable();
     this.joinRoomMessage = this._joinRoomMessage.asObservable();
-    this.peerRequestMessage = this._peerRequestMessage.asObservable();
     this.leaveRoomMessage = this._leaveRoomMessage.asObservable();
-    this.userId$ = this._userId.asObservable();
 
     this.signalRConn = new HubConnectionBuilder()
       .withUrl('http://localhost:5044')
@@ -33,26 +29,24 @@ export class SignalRService {
 
   public initializeConnection() {
     this._onJoinRoomMessage();
-    this._onPeerRequestMessage();
     this._onLeaveRoomMessage();
 
     try {
       this.signalRConn.start().then(() => {
-        this._joinRoom();
-        this._userId.next(this.signalRConn.connectionId ?? '');
+        this._onConnection.next();
+        console.info('SignalR connection Started...');
       });
-      console.log('SignalR connection Started...');
     } catch {
       console.error('SignalR connection Failed...');
     }
   }
 
-  public sendPeerRequest(toConnectionId: string, networkPeerId: string) {
-    this.signalRConn.invoke(
-      'RequestPeerConnection',
-      toConnectionId,
-      networkPeerId
-    );
+  public joinRoom(connectionId: string) {
+    this._invokeWithErrorLogging('JoinRoom', connectionId);
+  }
+
+  public leaveRoom(connectionId: string) {
+    this._invokeWithErrorLogging('LeaveRoom', connectionId);
   }
 
   private _onJoinRoomMessage() {
@@ -60,15 +54,6 @@ export class SignalRService {
       'JoinRoomMessage',
       (joinRoomMessage: JoinRoomMessage) => {
         this._joinRoomMessage.next(joinRoomMessage);
-      }
-    );
-  }
-
-  private _onPeerRequestMessage() {
-    this.signalRConn.on(
-      'PeerRequestMessage',
-      (peerRequestMessage: PeerRequestMessage) => {
-        this._peerRequestMessage.next(peerRequestMessage);
       }
     );
   }
@@ -82,7 +67,13 @@ export class SignalRService {
     );
   }
 
-  private _joinRoom() {
-    this.signalRConn.invoke('JoinRoom');
+  private _invokeWithErrorLogging(route: string, ...args: any[]) {
+    this.signalRConn.invoke(route, ...args).catch((err) => {
+      this._log('Invocations failed.', { route }, err);
+    });
+  }
+
+  private _log(message: string, ...args: any[]): void {
+    console.log(`[SigRService] ${message}`, ...args);
   }
 }

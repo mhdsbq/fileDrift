@@ -10,5 +10,5 @@ import { Observable } from 'rxjs';
   styleUrl: './user-profile.component.scss',
 })
 export class UserProfileComponent {
-  @Input() public userId$!: Observable<string>;
+  @Input() public connectionId!: string;
 }

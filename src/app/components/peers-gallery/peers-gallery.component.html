@@ -1,6 +1,6 @@
 <div class="container">
   <peer
     *ngFor="let connection of connections$ | async"
-    [userId]="connection"
+    [connectionId]="connection"
   ></peer>
 </div>

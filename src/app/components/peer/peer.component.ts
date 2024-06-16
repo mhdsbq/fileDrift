@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PeerManagerService } from '../../services/peer-manager.service';
-import { NetworkPeer } from '../../models/network-peer';
 import { FileShareDialogComponent } from '../file-share-dialog/file-share-dialog.component';
 import { NgIf } from '@angular/common';
+import { ConnectionManagerService } from '../../services/connection-manager.service';
+import { DataConnection } from 'peerjs';
 
 @Component({
   selector: 'peer',
@@ -12,23 +12,42 @@ import { NgIf } from '@angular/common';
   styleUrl: './peer.component.scss',
 })
 export class PeerComponent implements OnInit {
-  @Input() userId!: string;
+  @Input() connectionId!: string;
 
-  public networkPeer?: NetworkPeer;
   public showFileShareDialog: boolean = false;
+  public isConnected: boolean = false;
 
-  constructor(private _peerManager: PeerManagerService) {}
+  private _conn?: DataConnection;
+
+  constructor(private _connectionsManager: ConnectionManagerService) {}
 
   public ngOnInit(): void {
-    this.networkPeer = this._peerManager.getPeerByUserId(this.userId);
-    this.networkPeer.state.subscribe();
+    this._conn = this._connectionsManager.getConnectionById(this.connectionId);
+    this._trackConnectionStatus();
+
+    this._conn.on('data', (data) => {
+      console.log(typeof data, data);
+      alert('message received');
+    });
   }
 
   public onProfileClick() {
     this.showFileShareDialog = !this.showFileShareDialog;
   }
 
+  public onFileSelection(file: File): void {
+    this._conn?.send(file);
+    alert('message sent');
+  }
+
   public onDialogClose() {
     this.showFileShareDialog = false;
+  }
+
+  private _trackConnectionStatus() {
+    setTimeout(() => {
+      this.isConnected = this._conn?.peerConnection?.iceConnectionState === 'connected';
+      this._trackConnectionStatus();
+    }, 1000);
   }
 }

@@ -5,11 +5,16 @@
         width: 100px;
     }
 
-    .user-profile {
+    .remote-user-profile {
         height: 100px;
         width: 100px;
         border-radius: 100px;
         background-color: #dddd;
+        cursor: pointer;
+
+        &:hover{
+            outline: solid 3px #cccccc ;
+        }
     }
 
     .user-id {
@@ -27,5 +32,19 @@
         left: 0;
         width: 100vw;
         height: 100vh;
+    }
+
+    .conn-status{
+        height: 10px;
+        width: 10px;
+        border-radius: 5px;
+        display: inline-block;
+        &.connected{
+            background-color: green;
+        }
+        &.disconnected{
+            background-color: red;
+        }
+
     }
 }
