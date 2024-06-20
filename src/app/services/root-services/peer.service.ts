@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import Peer, { DataConnection } from 'peerjs';
-import { ConnectionManagerService } from './connection-manager.service';
+import { ConnectionDirectoryService } from './connection-directory.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 // Handles connection with peer js servers.
@@ -8,12 +8,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PeerService {
-  public id = crypto.randomUUID();
-  public onOpen$: Observable<boolean>;
+  public readonly id = crypto.randomUUID();
+  public readonly onOpen$: Observable<boolean>;
 
   private _peer: Peer;
   private _onOpen$ = new BehaviorSubject<boolean>(false);
-  public constructor(private _connectionsManager: ConnectionManagerService) {
+  public constructor(private _connectionDirectory: ConnectionDirectoryService) {
     this.onOpen$ = this._onOpen$.asObservable();
     this._peer = new Peer(this.id);
     this._onOpen();
@@ -24,20 +24,20 @@ export class PeerService {
 
   public connect(connectionId: string) {
     const conn = this._peer.connect(connectionId);
-    this._connectionsManager.addConnection(conn);
+    this._connectionDirectory.addConnection(conn);
   }
 
   public disconnect(connectionId: string) {
-    this._connectionsManager.getConnectionById(connectionId).close();
-    this._connectionsManager.removeConnection(connectionId);
+    this._connectionDirectory.getConnectionById(connectionId).close();
+    this._connectionDirectory.removeConnection(connectionId);
   }
 
   private _onConnection() {
     this._peer.on('connection', (conn: DataConnection) => {
       console.info(`[peer] Incoming connection from ${conn.peer}`);
-      this._connectionsManager.addConnection(conn);
+      this._connectionDirectory.addConnection(conn);
       conn.on('close', () => {
-        this._connectionsManager.removeConnection(conn.peer);
+        this._connectionDirectory.removeConnection(conn.peer);
       });
     });
   }

@@ -1,10 +1,19 @@
 <div class="container">
-  <div class="remote-user-profile" (click)="onProfileClick()"></div>
-  <div class="user-id"> <span class="conn-status" [class]="{connected: isConnected, disconnected:!isConnected}"></span> {{ connectionId }}</div>
+  <div
+    class="remote-user-profile"
+    [class]="{ 'active-notification': showNotificationBlinker }"
+    (click)="onProfileClick()"
+  ></div>
+  <div class="user-id">
+    <span class="conn-status" [class]="{ connected: isConnected, disconnected: !isConnected }"></span>
+    {{ connectionId }}
+  </div>
   <file-share-dialog
     *ngIf="showFileShareDialog"
     [username]="connectionId"
+    [fileTransferQueue]="fileTransferQueue"
     (fileSelection)="onFileSelection($event)"
     (close)="onDialogClose()"
+    (fileTransferResponse)="onFileTransferResponse($event)"
   ></file-share-dialog>
 </div>
