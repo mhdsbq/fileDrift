@@ -51,10 +51,23 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
 
         span {
             padding: 16px;
             font-size: 1rem;
+        }
+
+        &:hover{
+            transition: background-color 200ms;
+            color: white;
+            &.accept{
+                background-color: #6fd98d;
+            }
+            &.reject{
+                border-radius: 0 10px 10px 0;
+                background-color: #d96f6f;
+            }
         }
     }
 

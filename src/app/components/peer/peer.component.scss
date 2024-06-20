@@ -12,9 +12,14 @@
         background-color: #dddd;
         cursor: pointer;
 
+        &.active-notification{
+            outline: none;
+            animation: notification-pulse-outline  3s infinite;
+        }   
+
         &:hover{
             outline: solid 3px #cccccc ;
-        }
+        }     
     }
 
     .user-id {
@@ -46,5 +51,18 @@
             background-color: red;
         }
 
+    }
+
+    @keyframes notification-pulse-outline {
+        0% {
+            outline: solid 3px slateblue;
+        }
+        50% {
+            outline: solid 3px white;
+
+        }
+        100% {
+            outline: solid 3px slateblue;
+        }
     }
 }

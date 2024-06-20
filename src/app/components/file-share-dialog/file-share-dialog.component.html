@@ -7,16 +7,15 @@
   <div class="username">{{ username }}</div>
   <div class="send-button" (click)="openFilePicker()">Send file</div>
   <div class="transfer-status-list">
-    <span *ngIf="false"
-      >Click on send button to send a file or wait for others to send.</span
-    >
-    <transfer-status></transfer-status>
+    <div class="padding">
+      <span *ngIf="!fileTransferQueue?.length()">Click on send button to send a file or wait for others to send.</span>
+      <transfer-status
+        *ngFor="let fileTransfer of fileTransferQueue?.queue"
+        [fileTransferInfo]="fileTransfer"
+        (accept)="onAccept(fileTransfer)"
+        (reject)="onReject(fileTransfer)"
+      ></transfer-status>
+    </div>
   </div>
-  <input
-    #fileInput
-    (change)="onFileSelection()"
-    type="file"
-    name="file-input"
-    id="file-input"
-  />
+  <input #fileInput (change)="onFileSelection()" type="file" name="file-input" id="file-input" />
 </div>

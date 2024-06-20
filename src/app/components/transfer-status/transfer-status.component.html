@@ -3,18 +3,22 @@
   <div class="middle-section">
     <div class="file-name">
       <span class="ellipsis">
-        docker-desktop-4.zDZofFdfasdfsdfskadjflasdkjfralsdfjlasdfjlasdfjlasdjfldsjflasdfjldsjflsjdflA2.19.0
+        {{ fileTransferInfo?.fileName }}
       </span>
     </div>
+
     <div class="status-message">
-      <span class="ellipsis">Please accept to download</span>
+      <span class="ellipsis">{{ statusMessage }}</span>
     </div>
   </div>
 
-  <div class="button">
-    <span class="material-symbols-outlined"> download </span>
-  </div>
-  <div class="button">
-    <span class="material-symbols-outlined"> close </span>
-  </div>
+  <ng-container *ngIf="showDownloadButton">
+    <div class="button accept">
+      <span class="material-symbols-outlined" (click)="onDownload()"> download </span>
+    </div>
+
+    <div class="button reject">
+      <span class="material-symbols-outlined" (click)="onReject()"> close </span>
+    </div>
+  </ng-container>
 </div>

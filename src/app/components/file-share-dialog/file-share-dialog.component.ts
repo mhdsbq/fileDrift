@@ -1,19 +1,26 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { TransferStatusComponent } from '../transfer-status/transfer-status.component';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { ReadableQueue } from '../../models/queue';
+import { FileTransferInfo } from '../../models/file-transfer-info';
 
 @Component({
   selector: 'file-share-dialog',
   standalone: true,
-  imports: [TransferStatusComponent, NgIf],
+  imports: [TransferStatusComponent, NgIf, NgFor],
   templateUrl: './file-share-dialog.component.html',
   styleUrl: './file-share-dialog.component.scss',
 })
 export class FileShareDialogComponent {
   @Input() public username!: string;
+  @Input() public fileTransferQueue!: ReadableQueue<FileTransferInfo>;
 
   @Output() public close = new EventEmitter<void>();
   @Output() public fileSelection = new EventEmitter<File>();
+  @Output() public fileTransferResponse = new EventEmitter<{
+    response: 'accepted' | 'rejected';
+    transferInfo: FileTransferInfo;
+  }>();
 
   @ViewChild('fileInput') public fileInput?: ElementRef<HTMLInputElement>;
 
@@ -43,4 +50,7 @@ export class FileShareDialogComponent {
 
     this.fileSelection.emit(files[0]);
   }
+
+  public onAccept(fileTransferInfo: FileTransferInfo): void {}
+  public onReject(fileTransferInfo: FileTransferInfo): void {}
 }
