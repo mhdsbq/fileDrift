@@ -1,0 +1,80 @@
+:host {
+  .meter {
+    width: 100%;
+    aspect-ratio: 2;
+    background-color: var(--meter-color);
+    border-radius: 9999px 9999px 0 0;
+    overflow: hidden;
+  }
+
+  .meter__fill {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2;
+    background-color: var(--meter__fill-color);
+    top: 100%;
+    left: 0;
+    transform-origin: 50% 0;
+    transform: rotate(var(--meter__fill-rotate, 0turn));
+    transition: 0.5s;
+  }
+
+  .meter__filter {
+    position: relative;
+    bottom: 0;
+    left: 20%;
+    width: 60%;
+    aspect-ratio: 2;
+    background-color: var(--meter__filter-background);
+    border-radius: 9999px 9999px 0 0;
+    transform: translateY(-100%);
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: column;
+    overflow: hidden;
+
+    .meter__value {
+      font-size: large;
+    }
+
+    .meter__unit {
+      font-size: small;
+      color: grey;
+    }
+
+    .meter__button {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      border-radius: 9999px 9999px 0 0;
+
+      cursor: pointer;
+      color: white;
+      font-size: small;
+
+      &.button-start {
+        background-color: slateblue;
+      }
+
+      &.button-stop {
+        background-color: transparent;
+        & > * {
+          visibility: hidden;
+        }
+        &:hover {
+          background-color: #aaa;
+          opacity: 0.75;
+          color: red;
+          & > * {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}

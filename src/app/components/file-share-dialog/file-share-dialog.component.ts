@@ -3,11 +3,12 @@ import { TransferStatusComponent } from '../transfer-status/transfer-status.comp
 import { NgFor, NgIf } from '@angular/common';
 import { ReadableQueue } from '../../models/queue';
 import { FileTransferInfo } from '../../models/file-transfer-info';
+import { SpeedTestComponent } from '../speed-test/speed-test.component';
 
 @Component({
   selector: 'file-share-dialog',
   standalone: true,
-  imports: [TransferStatusComponent, NgIf, NgFor],
+  imports: [TransferStatusComponent, NgIf, NgFor, SpeedTestComponent],
   templateUrl: './file-share-dialog.component.html',
   styleUrl: './file-share-dialog.component.scss',
 })

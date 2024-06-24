@@ -1,0 +1,18 @@
+<div class="expandable-row" (click)="toggle()">
+  <div class="header">
+    <span class="material-symbols-outlined"> speed </span>
+    <span class="title">SpeedTest</span>
+  </div>
+  <span class="material-symbols-outlined" *ngIf="!showSpeedTest"> keyboard_arrow_right </span>
+  <span class="material-symbols-outlined" *ngIf="showSpeedTest"> keyboard_arrow_down </span>
+</div>
+
+<div class="speed-test-container" *ngIf="showSpeedTest">
+  <meter-gauge
+    [minValue]="0"
+    [maxValue]="100"
+    [value]="currentSpeedSignal"
+    (start)="onStart()"
+    (stop)="onStop()"
+  ></meter-gauge>
+</div>
