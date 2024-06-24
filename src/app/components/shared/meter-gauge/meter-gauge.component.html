@@ -1,0 +1,20 @@
+<div class="meter" [style.--meter-color]="styles.meterColor">
+  <div
+    class="meter__fill"
+    [style.--meter__fill-color]="styles.gaugeColor"
+    [style.--meter__fill-rotate]="turnRotation() + 'turn'"
+  ></div>
+  <div class="meter__filter" [style.--meter__filter-background]="styles.backgroundColor">
+    <ng-container *ngIf="state === 'idle'">
+      <div class="meter__button button-start" (click)="onStart()" *ngIf="enableStartButton">
+        <span class="start">start</span>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="state === 'running'">
+      <div class="meter__value">{{ value() }}</div>
+      <div class="meter__unit">{{ unit }}</div>
+      <div class="meter__button button-stop" (click)="onStop()" *ngIf="enableStartButton"><span>stop</span></div>
+    </ng-container>
+  </div>
+</div>

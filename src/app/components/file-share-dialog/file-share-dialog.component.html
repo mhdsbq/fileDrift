@@ -6,6 +6,10 @@
   <div class="profile-picture"></div>
   <div class="username">{{ username }}</div>
   <div class="send-button" (click)="openFilePicker()">Send file</div>
+  <ng-container *ngIf="true">
+    <speed-test [peerId]="username"></speed-test>
+    <div class="divider"></div>
+  </ng-container>
   <div class="transfer-status-list">
     <div class="padding">
       <span *ngIf="!fileTransferQueue?.length()">Click on send button to send a file or wait for others to send.</span>

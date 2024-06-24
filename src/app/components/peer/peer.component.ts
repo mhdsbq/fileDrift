@@ -44,8 +44,8 @@ export class PeerComponent implements OnInit {
     this._trackConnectionStatus();
 
     this._conn.on('data', (data) => {
-      console.log(typeof data, data);
-      alert('message received');
+      const byteData = data as Uint8Array;
+      console.log(byteData.length);
     });
 
     this._subscribeIncomingFileSendRequests();
