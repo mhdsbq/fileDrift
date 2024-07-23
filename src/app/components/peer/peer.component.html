@@ -5,15 +5,16 @@
     (click)="onProfileClick()"
   ></div>
   <div class="user-id">
-    <span class="conn-status" [class]="{ connected: isConnected, disconnected: !isConnected }"></span>
+    <span class="conn-status" [class]="{ connected: isConnected(), disconnected: !isConnected() }"></span>
     {{ connectionId }}
   </div>
   <file-share-dialog
     *ngIf="showFileShareDialog"
     [username]="connectionId"
-    [fileTransferQueue]="fileTransferQueue"
+    [fileTransfers]="fileTransferSignals"
     (fileSelection)="onFileSelection($event)"
     (close)="onDialogClose()"
-    (fileTransferResponse)="onFileTransferResponse($event)"
+    (accepted)="onAcceptOrReject($event, true)"
+    (rejected)="onAcceptOrReject($event, false)"
   ></file-share-dialog>
 </div>

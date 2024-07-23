@@ -1,8 +1,8 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, output, Output, Signal, ViewChild } from '@angular/core';
 import { TransferStatusComponent } from '../transfer-status/transfer-status.component';
 import { NgFor, NgIf } from '@angular/common';
 import { ReadableQueue } from '../../models/queue';
-import { FileTransferInfo } from '../../models/file-transfer-info';
+import { TransferInfo } from '../../models/file-transfer-info';
 import { SpeedTestComponent } from '../speed-test/speed-test.component';
 
 @Component({
@@ -14,14 +14,12 @@ import { SpeedTestComponent } from '../speed-test/speed-test.component';
 })
 export class FileShareDialogComponent {
   @Input() public username!: string;
-  @Input() public fileTransferQueue!: ReadableQueue<FileTransferInfo>;
+  @Input() public fileTransfers!: Signal<TransferInfo>[];
 
   @Output() public close = new EventEmitter<void>();
   @Output() public fileSelection = new EventEmitter<File>();
-  @Output() public fileTransferResponse = new EventEmitter<{
-    response: 'accepted' | 'rejected';
-    transferInfo: FileTransferInfo;
-  }>();
+  @Output() public accepted = new EventEmitter<string>();
+  @Output() public rejected = new EventEmitter<string>();
 
   @ViewChild('fileInput') public fileInput?: ElementRef<HTMLInputElement>;
 
@@ -52,6 +50,10 @@ export class FileShareDialogComponent {
     this.fileSelection.emit(files[0]);
   }
 
-  public onAccept(fileTransferInfo: FileTransferInfo): void {}
-  public onReject(fileTransferInfo: FileTransferInfo): void {}
+  public onAccept(operationId: string): void {
+    this.accepted.emit(operationId);
+  }
+  public onReject(operationId: string): void {
+    this.rejected.emit(operationId);
+  }
 }

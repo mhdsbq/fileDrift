@@ -74,7 +74,7 @@
 
       .padding {
         position: relative;
-        padding: 0px 5px 5px 5px;
+        padding-top: 8px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -82,20 +82,16 @@
         min-height: inherit;
 
         transfer-status {
-          margin-top: 5px;
           width: 100%;
+          box-sizing: border-box;
+          padding: 8px;
+          padding-top: 0px;
         }
       }
 
       span {
         font-size: 0.5rem;
         color: white;
-      }
-
-      transfer-status {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 8px;
       }
     }
 
