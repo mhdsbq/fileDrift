@@ -12,12 +12,12 @@
   </ng-container>
   <div class="transfer-status-list">
     <div class="padding">
-      <span *ngIf="!fileTransferQueue?.length()">Click on send button to send a file or wait for others to send.</span>
+      <span *ngIf="!fileTransfers.length">Click on send button to send a file or wait for others to send.</span>
       <transfer-status
-        *ngFor="let fileTransfer of fileTransferQueue?.queue"
-        [fileTransferInfo]="fileTransfer"
-        (accept)="onAccept(fileTransfer)"
-        (reject)="onReject(fileTransfer)"
+        *ngFor="let fileTransfer of fileTransfers"
+        [transferInfo]="fileTransfer"
+        (accept)="onAccept(fileTransfer().operationId)"
+        (reject)="onReject(fileTransfer().operationId)"
       ></transfer-status>
     </div>
   </div>

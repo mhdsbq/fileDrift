@@ -1,12 +1,10 @@
-import { FileTransferStatusEnum } from './transfer-status-enum';
+import { TransferStatusEnum } from './transfer-status-enum';
 
-export interface FileTransferInfo {
-  senderId: string;
-  receiverId: string;
-  isSender: boolean;
+export interface TransferInfo {
   fileName: string;
   fileSize: number;
-  transferStatus: FileTransferStatusEnum;
+  transferStatus: TransferStatusEnum;
   transferredBytes: number;
-  transferStartTime: Date;
+  transferStartTime?: Date;
+  operationId: string;
 }

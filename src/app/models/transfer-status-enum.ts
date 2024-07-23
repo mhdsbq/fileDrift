@@ -1,4 +1,6 @@
-export enum FileTransferStatusEnum {
+export enum TransferStatusEnum {
+  Sent,
+  Received,
   Sending,
   Receiving,
   AcceptPending,

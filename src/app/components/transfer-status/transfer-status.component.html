@@ -1,18 +1,25 @@
 <div class="container">
+  <div class="progress-overlay" *ngIf="!showDownloadButton()">
+    <div
+      class="progress-bar"
+      [style.width]="progressPercentage()"
+      [style.background-color]="progressPercentage() === '100%' ? 'seagreen' : 'slateblue'"
+    ></div>
+  </div>
   <div class="file-icon"></div>
   <div class="middle-section">
     <div class="file-name">
       <span class="ellipsis">
-        {{ fileTransferInfo?.fileName }}
+        {{ transferInfo?.()?.fileName }}
       </span>
     </div>
 
     <div class="status-message">
-      <span class="ellipsis">{{ statusMessage }}</span>
+      <span class="ellipsis">{{ statusMessage() }}</span>
     </div>
   </div>
 
-  <ng-container *ngIf="showDownloadButton">
+  <ng-container *ngIf="showDownloadButton()">
     <div class="button accept">
       <span class="material-symbols-outlined" (click)="onDownload()"> download </span>
     </div>

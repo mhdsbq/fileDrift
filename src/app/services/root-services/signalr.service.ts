@@ -3,8 +3,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { Observable, Subject } from 'rxjs';
 import { JoinRoomMessage } from '../../types/signal-r/join-room-message';
 import { LeaveRoomMessage } from '../../types/signal-r/leave-room-message';
-import { FileSendRequest } from '../../types/signal-r/file-send-request';
-import { FileSendResponse } from '../../types/signal-r/file-send-response';
+import { PayloadBase, SignalMessage } from '../../types/signal-r/signal-message/signal-message';
 
 @Injectable({
   providedIn: 'root',
@@ -13,22 +12,19 @@ export class SignalRService {
   public onConnection: Observable<void>;
   public joinRoomMessage: Observable<JoinRoomMessage>;
   public leaveRoomMessage: Observable<LeaveRoomMessage>;
-  public fileSendRequest: Observable<FileSendRequest>;
-  public fileSendResponse: Observable<FileSendResponse>;
+  public signalMessage: Observable<SignalMessage<any>>;
 
   private signalRConn: HubConnection;
   private _onConnection = new Subject<void>();
   private _joinRoomMessage = new Subject<JoinRoomMessage>();
   private _leaveRoomMessage = new Subject<LeaveRoomMessage>();
-  private _fileSendRequest = new Subject<FileSendRequest>();
-  private _fileSendResponse = new Subject<FileSendResponse>();
+  private _signalMessage = new Subject<SignalMessage<any>>();
 
   public constructor() {
     this.onConnection = this._onConnection.asObservable();
     this.joinRoomMessage = this._joinRoomMessage.asObservable();
     this.leaveRoomMessage = this._leaveRoomMessage.asObservable();
-    this.fileSendRequest = this._fileSendRequest.asObservable();
-    this.fileSendResponse = this._fileSendResponse.asObservable();
+    this.signalMessage = this._signalMessage.asObservable();
 
     this.signalRConn = new HubConnectionBuilder().withUrl('http://localhost:5044').build();
   }
@@ -36,8 +32,7 @@ export class SignalRService {
   public initializeConnection() {
     this._onJoinRoomMessage();
     this._onLeaveRoomMessage();
-    this._onFileSendRequest();
-    this._onFileSendResponse();
+    this._onSignalMessage();
 
     try {
       this.signalRConn.start().then(() => {
@@ -57,12 +52,9 @@ export class SignalRService {
     this._invokeWithErrorLogging('LeaveRoom', connectionId);
   }
 
-  public sendfileSendRequest(fileSendRequest: FileSendRequest): void {
-    this._invokeWithErrorLogging('FileSendRequest', fileSendRequest);
-  }
-
-  public sendFileSendResponse(fileSendResponse: FileSendResponse): void {
-    this._invokeWithErrorLogging('FileSendResponse', fileSendResponse);
+  public SendSignalMessage<T extends PayloadBase>(signalMessage: SignalMessage<T>) {
+    // console.log('[SigRService] Signal Message Sent', signalMessage);
+    this._invokeWithErrorLogging('SendSignalMessage', signalMessage);
   }
 
   private _onJoinRoomMessage() {
@@ -77,15 +69,10 @@ export class SignalRService {
     });
   }
 
-  private _onFileSendRequest() {
-    this.signalRConn.on('FileSendRequest', (fileSendRequest: FileSendRequest) => {
-      this._fileSendRequest.next(fileSendRequest);
-    });
-  }
-
-  private _onFileSendResponse() {
-    this.signalRConn.on('FileSendResponse', (fileSendResponse: FileSendResponse) => {
-      this._fileSendResponse.next(fileSendResponse);
+  private _onSignalMessage() {
+    this.signalRConn.on('SignalMessage', (signalMessage: SignalMessage<any>) => {
+      // console.log('[SigRService] Signal Message received', signalMessage);
+      this._signalMessage.next(signalMessage);
     });
   }
 
