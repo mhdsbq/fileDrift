@@ -7,8 +7,8 @@ import { PeerService } from '../../services/root-services/peer.service';
 import { ConnectionDirectoryService } from '../../services/root-services/connection-directory.service';
 import {
   MessageType,
+  ReadyToReceive,
   SignalMessage,
-  StartNextTransfer,
   TransferComplete,
   TransferRequest,
   TransferResponse,
@@ -121,10 +121,12 @@ export class PeerComponent implements OnInit {
   }
   private _handleTransferComplete(message: SignalMessage<TransferComplete>) {
     this._updateTransferStatus(message.payload.operationId, TransferStatusEnum.Sent);
-    // this._startNextTransfer({ readyToSend: true });
+    this._startNextTransfer({ readyToSend: true, sendReadyToReceive: true });
   }
 
-  private _handleStartNextTransfer(message: SignalMessage<StartNextTransfer>) {}
+  private _handleReadyToReceive(message: SignalMessage<ReadyToReceive>) {
+    this._startNextTransfer({ readyToSend: true });
+  }
 
   private _handleTransferStatistics(message: SignalMessage<TransferStatistics>) {
     this.operationIdToSignalsMap[message.payload.operationId].update((info) => ({
@@ -148,8 +150,8 @@ export class PeerComponent implements OnInit {
           case MessageType.TransferComplete:
             this._handleTransferComplete(message);
             break;
-          case MessageType.StartNextTransfer:
-            this._handleStartNextTransfer(message);
+          case MessageType.ReadyToReceive:
+            this._handleReadyToReceive(message);
             break;
           case MessageType.TransferStatistics:
             this._handleTransferStatistics(message);
@@ -194,6 +196,18 @@ export class PeerComponent implements OnInit {
         durationSeconds: 0,
         isSuccessful: isSuccess,
         operationId: operationId,
+      },
+      sentAt: null,
+    });
+  }
+
+  private _sendReadyToReceiveMessage(operationId: string) {
+    this._signalRService.SendSignalMessage<ReadyToReceive>({
+      messageType: MessageType.ReadyToReceive,
+      senderId: this._peerService.id,
+      receiverId: this.connectionId,
+      payload: {
+        operationId,
       },
       sentAt: null,
     });
@@ -266,7 +280,7 @@ export class PeerComponent implements OnInit {
       this._sendTransferCompleteMessage(this.ongoingTransfer().operationId, true);
       this._updateTransferStatus(this.ongoingTransfer!().operationId, TransferStatusEnum.Received);
       this.ongoingTransfer = undefined;
-      // this._startNextTransfer({ readyToSend: false });
+      this._startNextTransfer({ readyToSend: false });
     });
   }
 
@@ -309,7 +323,7 @@ export class PeerComponent implements OnInit {
     }, 1000);
   }
 
-  private _startNextTransfer(options: { readyToSend: boolean }) {
+  private _startNextTransfer(options: { readyToSend: boolean; sendReadyToReceive?: boolean }) {
     if (this.ongoingTransfer) {
       return;
     }
@@ -327,9 +341,19 @@ export class PeerComponent implements OnInit {
 
     this.ongoingTransfer = nextTransfer;
 
-    // Send file.
-    if (options.readyToSend && nextTransfer().transferStatus === TransferStatusEnum.RemoteAccepted) {
-      this._conn!.send(this.operationIdToFileMap[nextTransfer().operationId]);
+    // Send.
+    if (nextTransfer().transferStatus === TransferStatusEnum.RemoteAccepted) {
+      if (options.readyToSend) {
+        this._conn!.send(this.operationIdToFileMap[nextTransfer().operationId]);
+        this._updateTransferStatus(this.ongoingTransfer().operationId, TransferStatusEnum.Sending);
+      }
+    }
+    // Receive
+    else {
+      this._updateTransferStatus(this.ongoingTransfer().operationId, TransferStatusEnum.Receiving);
+      if (options.sendReadyToReceive) {
+        this._sendReadyToReceiveMessage(nextTransfer().operationId);
+      }
     }
   }
 }
