@@ -10,7 +10,7 @@ export enum MessageType {
   TransferRequest,
   TransferResponse,
   TransferComplete,
-  StartNextTransfer,
+  ReadyToReceive,
   TransferStatistics,
 }
 
@@ -33,7 +33,7 @@ export interface TransferComplete extends PayloadBase {
   durationSeconds: number;
 }
 
-export interface StartNextTransfer extends PayloadBase {}
+export interface ReadyToReceive extends PayloadBase {}
 
 export interface TransferStatistics extends PayloadBase {
   transferredSizeBytes: number;
